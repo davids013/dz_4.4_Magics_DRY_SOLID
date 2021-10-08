@@ -1,50 +1,96 @@
 package product;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import logger.CsvLogger;
+import logger.Logger;
 
-public class Cart {
-    private List<Product> products;
+import java.util.*;
+
+public class Cart implements Downloadable {
+    private Map<Product, Integer> cart;
 
     public Cart() {
-        products = new ArrayList<>();
+        cart = new TreeMap<Product, Integer>();
     }
 
-    public List<Product> getProducts() {
-        return products;
+    public Cart(Cart cart) {
+        this.cart = cart.getCart();
     }
 
-    public Cart setProducts(List<Product> products) {
-        this.products = products;
+    public Map<Product, Integer> getCart() {
+        return cart;
+    }
+
+    public Cart setCart(Map<Product, Integer> cart) {
+        this.cart = cart;
         return this;
     }
 
-    public Cart sort(Comparator comparator) {
-        products.sort(comparator);
+    public Cart setCart(Cart cart) {
+        this.cart = cart.getCart();
         return this;
     }
 
     public Cart add(Product product) {
-        if (!products.contains(product)) products.add(product);
+        if (cart.containsKey(product)) {
+            cart.put(product, cart.get(product) + 1);
+        } else cart.put(product, 1);
         return this;
-    }
-
-    public Product get(int index) {
-        return products.get(index);
     }
 
     public Cart remove(Product product) {
-        products.remove(product);
+        if (cart.containsKey(product)) {
+            if (cart.get(product) > 1) {
+                cart.put(product, cart.get(product) - 1);
+            } else cart.remove(product);
+        }
         return this;
     }
 
-    public int size() {
-        return products.size();
+    public Cart removeAll(Product product) {
+        if (cart.containsKey(product)) cart.remove(product);
+        return this;
+    }
+
+    public int getPrice() {
+        int price = 0;
+        for (Product p : cart.keySet()) price += p.getPrice() * cart.get(p);
+        return price;
+    }
+
+    @Override
+    public boolean download() {
+//        sOlid
+        Logger logger = new
+//                ConsoleLogger();
+//                TxtLogger();
+                CsvLogger("YourCart.csv");
+        return logger.log(toString());
     }
 
     @Override
     public String toString() {
-        return products.toString();
+        StringBuilder sb = new StringBuilder();
+        for (String head : Product.getHeader()) {
+            sb.append(head + ", ");
+        }
+        sb
+                .append("В корзине,шт")
+                .append(", Итого,руб")
+                .append("\r\n");
+        for (Product product : cart.keySet()) {
+            sb
+                    .append(product.toString())
+                    .append(", ")
+                    .append(cart.get(product))
+                    .append("            ")
+                    .append(", ")
+                    .append(cart.get(product) * product.getPrice())
+                    .append("\r\n");
+        }
+        sb
+                .append("Стоимость корзины,руб, ")
+                .append(getPrice())
+                .append("\r\n");
+        return sb.toString().replace(", ", "\t");
     }
 }

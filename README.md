@@ -3,3 +3,11 @@
 ### Домашнее задание к лекции 4.4 "Magics, DRY, SOLID"
 
 ## Задача: Магазин
+
+1. Magics - Main:7, Product:19
+2. DRY - 
+3. S - 
+4. O - Cart:45
+5. L - 
+6. I - 
+7. D - 

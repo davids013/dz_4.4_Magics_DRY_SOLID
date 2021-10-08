@@ -1,11 +1,20 @@
 package product;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class Product implements Comparable {
-    private final String[] HEADER = {"Название", "Номер", "Цена, руб", "Вес, кг", ""};
+    private static final String[] HEADER = {
+            "Название  ",
+            "Ном.номер          ",
+            "Цена,руб   ",
+            "Склад,шт  ",
+            "Вес,кг",
+            "Категория    ",
+            "Цвет    ",
+            "Описание     "};
     private String title;
     private long partNumber;
     private int price;
@@ -35,6 +44,10 @@ public class Product implements Comparable {
                 .setStock((int) (Math.random() * MAX_STOCK))
                 .setWeight((float) Math.random() * MAX_WEIGHT)
                 .setColor(Color.values()[(int) (Math.random() * Color.values().length)]);
+    }
+
+    public static List<String> getHeader() {
+        return Arrays.asList(HEADER);
     }
 
     public Product(String title, long partNumber) {
@@ -103,12 +116,12 @@ public class Product implements Comparable {
 
     public String getCategoryString() {
         return switch (category) {
-            case DISHES     -> "посуда";
+            case DISHES     -> "посуда       ";
             case CHEMICALS  -> "бытовая химия";
-            case CLOTHES    -> "одежда";
-            case FOOD       -> "еда";
-            case OTHER      -> "прочее";
-            default         -> "не указано";
+            case CLOTHES    -> "одежда       ";
+            case FOOD       -> "еда          ";
+            case OTHER      -> "прочее       ";
+            default         -> "не указано   ";
         };
     }
 
@@ -123,13 +136,13 @@ public class Product implements Comparable {
 
     public String getColorString() {
         return switch (color) {
-            case RED    -> "красный";
-            case GREEN  -> "зелёный";
-            case BLUE   -> "синий";
-            case YELLOW -> "жёлтый";
-            case WHITE  -> "белый";
-            case BLACK  -> "чёрный";
-            case GREY   -> "серый";
+            case RED    -> "красный  ";
+            case GREEN  -> "зелёный  ";
+            case BLUE   -> "синий    ";
+            case YELLOW -> "жёлтый   ";
+            case WHITE  -> "белый    ";
+            case BLACK  -> "чёрный   ";
+            case GREY   -> "серый    ";
             default     -> "не указан";
         };
     }
@@ -154,16 +167,17 @@ public class Product implements Comparable {
 
     @Override
     public String toString() {
-        return "Product{" +
-                "title='" + title + '\'' +
-                ", partNumber=" + partNumber +
-                ", price=" + price +
-                ", stock=" + stock +
-                ", weight=" + weight +
-                ", category=" + category +
-                ", color=" + color +
-                ", description='" + description + '\'' +
-                '}';
+        StringBuilder sb = new StringBuilder();
+        sb
+                .append("" + getTitle())
+                .append(", " + getPartNumber())
+                .append(", " + getPrice() + "       ")
+                .append(", " + getStock() + "       ")
+                .append(", " + String.format("%.3f", getWeight()))
+                .append(", " + getCategoryString())
+                .append(", " + getColorString())
+                .append(", " + getDescription());
+        return sb.toString();
     }
 
     public List<String> toList() {
@@ -181,6 +195,6 @@ public class Product implements Comparable {
 
     @Override
     public int compareTo(Object o) {
-        return title.compareTo(((Product) o).getTitle());
+        return title.toLowerCase().compareTo(((Product) o).getTitle().toLowerCase());
     }
 }
