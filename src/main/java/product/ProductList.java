@@ -3,12 +3,13 @@ package product;
 import logger.Logger;
 import logger.TxtLogger;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ProductList implements Downloadable {
+public class ProductList implements Downloadable, Uploadable {
     private List<Product> products;
 
     public ProductList() {
@@ -20,7 +21,7 @@ public class ProductList implements Downloadable {
     }
 
     public List<Product> getProducts() {
-        return products;
+        return (List<Product>)((ArrayList<Product>) products).clone();
     }
 
     public ProductList setProducts(List<Product> products) {
@@ -33,7 +34,7 @@ public class ProductList implements Downloadable {
     }
 
     public Product get(int index) {
-        return products.get(index);
+        return products.get(index).clone();
     }
 
     public boolean remove(Product product) {
@@ -51,8 +52,11 @@ public class ProductList implements Downloadable {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        List<String> header = Product.getHeader();
         for (String head : Product.getHeader()) {
-            sb.append(head + ", ");
+            sb.append(head);
+            if (!head.equals(header.get(header.size() - 1)))
+                sb.append(", ");
         }
         sb.append("\r\n");
         for (Product product : products) {
@@ -64,6 +68,7 @@ public class ProductList implements Downloadable {
     }
 
     private void sort(Comparator comparator) {
+//        soliD
         products.sort(comparator);
     }
 
@@ -87,11 +92,17 @@ public class ProductList implements Downloadable {
 
     @Override
     public boolean download() {
-//        sOlid
+//        soliD
         Logger logger = new
 //                ConsoleLogger();
                 TxtLogger("Catalogue.txt");
 //                CsvLogger();
         return logger.log(toString());
+    }
+
+    @Override
+    public boolean upload(File file) {
+//        TODO: Здесь должен быть парсер .csv и .txt, если на это найдётся время
+        return false;
     }
 }

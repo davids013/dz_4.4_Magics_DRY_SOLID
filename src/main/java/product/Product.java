@@ -1,20 +1,19 @@
 package product;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class Product implements Comparable {
+public class Product implements Comparable, Cloneable {
     private static final String[] HEADER = {
-            "Название  ",
-            "Ном.номер          ",
-            "Цена,руб   ",
-            "Склад,шт  ",
-            "Вес,кг",
-            "Категория    ",
-            "Цвет    ",
-            "Описание     "};
+            String.format("%-15s",  "Название"),
+            String.format("%-19s",  "Ном.номер"),
+            String.format("%-11s",  "Цена,руб"),
+            String.format("%-10s",  "Склад,шт"),
+            String.format("%-5s",   "Вес,кг"),
+            String.format("%-13s",  "Категория"),
+            String.format("%-8s",   "Цвет"),
+            String.format("%-13s",  "Описание")};
     private String title;
     private long partNumber;
     private int price;
@@ -116,12 +115,12 @@ public class Product implements Comparable {
 
     public String getCategoryString() {
         return switch (category) {
-            case DISHES     -> "посуда       ";
-            case CHEMICALS  -> "бытовая химия";
-            case CLOTHES    -> "одежда       ";
-            case FOOD       -> "еда          ";
-            case OTHER      -> "прочее       ";
-            default         -> "не указано   ";
+            case DISHES     -> String.format("%-13s", "посуда");
+            case CHEMICALS  -> String.format("%-13s", "бытовая химия");
+            case CLOTHES    -> String.format("%-13s", "одежда");
+            case FOOD       -> String.format("%-13s", "еда");
+            case OTHER      -> String.format("%-13s", "прочее");
+            default         -> String.format("%-13s", "не указано");
         };
     }
 
@@ -136,14 +135,14 @@ public class Product implements Comparable {
 
     public String getColorString() {
         return switch (color) {
-            case RED    -> "красный  ";
-            case GREEN  -> "зелёный  ";
-            case BLUE   -> "синий    ";
-            case YELLOW -> "жёлтый   ";
-            case WHITE  -> "белый    ";
-            case BLACK  -> "чёрный   ";
-            case GREY   -> "серый    ";
-            default     -> "не указан";
+            case RED    -> String.format("%-9s", "красный  ");
+            case GREEN  -> String.format("%-9s", "зелёный  ");
+            case BLUE   -> String.format("%-9s", "синий    ");
+            case YELLOW -> String.format("%-9s", "жёлтый   ");
+            case WHITE  -> String.format("%-9s", "белый    ");
+            case BLACK  -> String.format("%-9s", "чёрный   ");
+            case GREY   -> String.format("%-9s", "серый    ");
+            default     -> String.format("%-9s", "не указан");
         };
     }
 
@@ -169,28 +168,25 @@ public class Product implements Comparable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb
-                .append("" + getTitle())
-                .append(", " + getPartNumber())
-                .append(", " + getPrice() + "       ")
-                .append(", " + getStock() + "       ")
-                .append(", " + String.format("%.3f", getWeight()))
-                .append(", " + getCategoryString())
-                .append(", " + getColorString())
-                .append(", " + getDescription());
+                .append(String.format("%-15s", getTitle()))
+                .append(String.format(", %-19s", getPartNumber()))
+                .append(String.format(", %-11s", getPrice()))
+                .append(String.format(", %-10s", getStock()))
+                .append(String.format(", %.3f", getWeight()))
+                .append(String.format(", %-13s", getCategoryString()))
+                .append(String.format(", %-8s", getColorString()))
+                .append(String.format(", %-13s", getDescription()));
         return sb.toString();
     }
 
-    public List<String> toList() {
-        List<String> list = new ArrayList<>();
-        list.add("" + getTitle());
-        list.add("" + getPartNumber());
-        list.add("" + getPrice());
-        list.add("" + getStock());
-        list.add("" + getWeight());
-        list.add("" + getCategoryString());
-        list.add("" + getColorString());
-        list.add("" + getDescription());
-        return list;
+    @Override
+    public Product clone() {
+        try {
+            return (Product) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override

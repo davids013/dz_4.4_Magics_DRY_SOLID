@@ -13,31 +13,31 @@ public class Cart implements Downloadable {
     }
 
     public Cart(Cart cart) {
-        this.cart = cart.getCart();
+        this.cart = new TreeMap<Product, Integer>(cart.getCart());
     }
 
-    public Map<Product, Integer> getCart() {
-        return cart;
+    public final Map<Product, Integer> getCart() {
+        return new TreeMap<Product, Integer>(cart);
     }
 
-    public Cart setCart(Map<Product, Integer> cart) {
-        this.cart = cart;
+    public final Cart setCart(Map<Product, Integer> cart) {
+        this.cart = new TreeMap<Product, Integer>(cart);
         return this;
     }
 
-    public Cart setCart(Cart cart) {
+    public final Cart setCart(Cart cart) {
         this.cart = cart.getCart();
         return this;
     }
 
-    public Cart add(Product product) {
+    public final Cart add(Product product) {
         if (cart.containsKey(product)) {
             cart.put(product, cart.get(product) + 1);
         } else cart.put(product, 1);
         return this;
     }
 
-    public Cart remove(Product product) {
+    public final Cart remove(Product product) {
         if (cart.containsKey(product)) {
             if (cart.get(product) > 1) {
                 cart.put(product, cart.get(product) - 1);
@@ -46,12 +46,12 @@ public class Cart implements Downloadable {
         return this;
     }
 
-    public Cart removeAll(Product product) {
+    public final Cart removeAll(Product product) {
         if (cart.containsKey(product)) cart.remove(product);
         return this;
     }
 
-    public int getPrice() {
+    public final int getPrice() {
         int price = 0;
         for (Product p : cart.keySet()) price += p.getPrice() * cart.get(p);
         return price;
@@ -59,7 +59,7 @@ public class Cart implements Downloadable {
 
     @Override
     public boolean download() {
-//        sOlid
+//        soliD
         Logger logger = new
 //                ConsoleLogger();
 //                TxtLogger();
@@ -74,15 +74,13 @@ public class Cart implements Downloadable {
             sb.append(head + ", ");
         }
         sb
-                .append("В корзине,шт")
-                .append(", Итого,руб")
+                .append(String.format("%-15s", "В корзине,шт"))
+                .append(String.format(", %-10s", "Итого,руб"))
                 .append("\r\n");
         for (Product product : cart.keySet()) {
             sb
                     .append(product.toString())
-                    .append(", ")
-                    .append(cart.get(product))
-                    .append("            ")
+                    .append(String.format(", %-15s", cart.get(product)))
                     .append(", ")
                     .append(cart.get(product) * product.getPrice())
                     .append("\r\n");
@@ -92,5 +90,10 @@ public class Cart implements Downloadable {
                 .append(getPrice())
                 .append("\r\n");
         return sb.toString().replace(", ", "\t");
+    }
+
+    public final void clear() {
+        cart = null;
+        System.gc();
     }
 }
